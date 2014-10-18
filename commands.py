@@ -1,6 +1,7 @@
 import sys, json, random, asyncio
 
 import hangups
+import re
 import random
 from urllib.request  import urlopen
 from hangups.ui.utils import get_conv_name
@@ -242,3 +243,12 @@ def flip(bot, event, *args):
     """Flip a coin"""
     n = random.randint(0, 1)
     bot.send_message(event.conv, "Heads" if n else "Tails")
+
+@command.register
+def fortune(bot, event, *args):
+    """Give a random fortune"""
+    url = "http://www.fortunecookiemessage.com"
+    html = urlopen(url).read().decode('utf-8')
+    m = re.search("class=\"cookie-link\">(<p>)?", content)
+    m = re.search("(</p>)?</a>", content[m.end():])
+    bot.send_message(event.conv, m.string[:m.start()])

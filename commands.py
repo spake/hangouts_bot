@@ -1,4 +1,4 @@
-import sys, json, random, asyncio
+﻿import sys, json, random, asyncio
 
 import hangups
 import re
@@ -107,7 +107,7 @@ def roll(bot, event, *args):
 @command.register
 def users(bot, event, *args):
     """Výpis všech uživatelů v aktuálním Hangoutu (včetně G+ účtů a emailů)"""
-    segments = [hangups.ChatMessageSegment('People in this chanel ({}):'.format(len(event.conv.users)),
+    segments = [hangups.ChatMessageSegment('People in this channel ({}):'.format(len(event.conv.users)),
                                            is_bold=True),
                 hangups.ChatMessageSegment('\n', hangups.SegmentType.LINE_BREAK)]
     for u in sorted(event.conv.users, key=lambda x: x.full_name.split()[-1]):
@@ -251,6 +251,20 @@ def flip(bot, event, *args):
     """Flip a coin"""
     n = random.randint(0, 1)
     bot.send_message(event.conv, "Heads" if n else "Tails")
+
+@command.register
+def prereqs(bot, event, code, *args):
+    """Print the prereqs for a course"""
+    try:
+        course_info = json.loads(urlopen('http://pathways.csesoc.unsw.edu.au/tree/'+code.upper()).read().decode('utf-8'))
+        if course_info['below']:
+            for prereq in course_info['below']:
+                if prereq['exists']:
+                    bot.send_message(event.conv, prereq['code'] + ' ' + prereq['name'])
+        else:
+            bot.send_message(event.conv, 'No prerequisites')
+    except:
+        bot.send_message(event.conv, 'something wobbed up')
 
 @command.register
 def fortune(bot, event, *args):

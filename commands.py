@@ -4,7 +4,7 @@ import hangups
 import random
 from urllib.request  import urlopen
 from hangups.ui.utils import get_conv_name
-
+import dice
 from hangupsbot.utils import text_to_segments
 
 
@@ -94,11 +94,19 @@ def echo(bot, event, *args):
     """Pojďme se opičit!"""
     bot.send_message(event.conv, '{}'.format(' '.join(args)))
 
+@command.register
+def roll(bot, event, *args):
+    r = dice.roll(''.join(args))
+    output = ""
+    for i in r:
+        output += " " + str(i)
+    output += "] = " + str(int(r))
+    bot.send_message(event.conv, "[" + output.strip())
 
 @command.register
 def users(bot, event, *args):
     """Výpis všech uživatelů v aktuálním Hangoutu (včetně G+ účtů a emailů)"""
-    segments = [hangups.ChatMessageSegment('Seznam uživatelů (celkem {}):'.format(len(event.conv.users)),
+    segments = [hangups.ChatMessageSegment('People in this chanel ({}):'.format(len(event.conv.users)),
                                            is_bold=True),
                 hangups.ChatMessageSegment('\n', hangups.SegmentType.LINE_BREAK)]
     for u in sorted(event.conv.users, key=lambda x: x.full_name.split()[-1]):

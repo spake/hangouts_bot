@@ -257,6 +257,6 @@ def fortune(bot, event, *args):
     """Give a random fortune"""
     url = "http://www.fortunecookiemessage.com"
     html = urlopen(url).read().decode('utf-8')
-    m = re.search("class=\"cookie-link\">(<p>)?", content)
-    m = re.search("(</p>)?</a>", content[m.end():])
+    m = re.search("class=\"cookie-link\">(<p>)?", html)
+    m = re.search("(</p>)?</a>",html[m.end():])
     bot.send_message(event.conv, m.string[:m.start()])

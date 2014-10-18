@@ -2,6 +2,7 @@ import sys, json, random, asyncio
 
 import hangups
 import random
+from urllib.request  import urlopen
 from hangups.ui.utils import get_conv_name
 
 from hangupsbot.utils import text_to_segments
@@ -80,6 +81,12 @@ def help(bot, event, cmd=None, *args):
 def ping(bot, event, *args):
     """Zahrajem si ping pong!"""
     bot.send_message(event.conv, 'pong')
+
+@command.register
+def socs(bot, event, *args):
+    url = "http://issocsopen.com/api"
+    page = urlopen(url)
+    bot.send_message(event.conv, page.read().decode('utf-8'))
 
 
 @command.register

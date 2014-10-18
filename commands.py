@@ -1,10 +1,11 @@
-import sys, json, random, asyncio
+﻿import sys, json, random, asyncio
 
 import hangups
+import re
 import random
 from urllib.request  import urlopen
 from hangups.ui.utils import get_conv_name
-
+import dice
 from hangupsbot.utils import text_to_segments
 
 
@@ -94,11 +95,19 @@ def echo(bot, event, *args):
     """Pojďme se opičit!"""
     bot.send_message(event.conv, '{}'.format(' '.join(args)))
 
+@command.register
+def roll(bot, event, *args):
+    r = dice.roll(''.join(args))
+    output = ""
+    for i in r:
+        output += " " + str(i)
+    output += "] = " + str(int(r))
+    bot.send_message(event.conv, "[" + output.strip())
 
 @command.register
 def users(bot, event, *args):
     """Výpis všech uživatelů v aktuálním Hangoutu (včetně G+ účtů a emailů)"""
-    segments = [hangups.ChatMessageSegment('Seznam uživatelů (celkem {}):'.format(len(event.conv.users)),
+    segments = [hangups.ChatMessageSegment('People in this channel ({}):'.format(len(event.conv.users)),
                                            is_bold=True),
                 hangups.ChatMessageSegment('\n', hangups.SegmentType.LINE_BREAK)]
     for u in sorted(event.conv.users, key=lambda x: x.full_name.split()[-1]):
@@ -242,19 +251,7 @@ def flip(bot, event, *args):
     """Flip a coin"""
     n = random.randint(0, 1)
     bot.send_message(event.conv, "Heads" if n else "Tails")
-    
-@command.register
-def roll(bot, event, roll='6', *args):
-    """Roll a die"""
-    try:
-        if '-' in roll:
-            limits = roll.split('-')
-            return random.randint(int(limits[0]), int(limits[1]))
-        else:
-            return random.randint(1, int(roll))
-    except:
-        return "try again u wob"
-        
+
 @command.register
 def prereqs(bot, event, code, *args):
     """Print the prereqs for a course"""
@@ -268,3 +265,12 @@ def prereqs(bot, event, code, *args):
             bot.send_message(event.conv, 'No prerequisites')
     except:
         bot.send_message(event.conv, 'something wobbed up')
+
+@command.register
+def fortune(bot, event, *args):
+    """Give a random fortune"""
+    url = "http://www.fortunecookiemessage.com"
+    html = urlopen(url).read().decode('utf-8')
+    m = re.search("class=\"cookie-link\">(<p>)?", content)
+    m = re.search("(</p>)?</a>", content[m.end():])
+    bot.send_message(event.conv, m.string[:m.start()])

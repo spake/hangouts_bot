@@ -254,3 +254,17 @@ def roll(bot, event, roll='6', *args):
             return random.randint(1, int(roll))
     except:
         return "try again u wob"
+        
+@command.register
+def prereqs(bot, event, code, *args):
+    """Print the prereqs for a course"""
+    try:
+        course_info = json.loads(urlopen('http://pathways.csesoc.unsw.edu.au/tree/'+code.upper()).read().decode('utf-8'))
+        if course_info['below']:
+            for prereq in course_info['below']:
+                if prereq['exists']:
+                    bot.send_message(event.conv, prereq['code'] + ' ' + prereq['name'])
+        else:
+            bot.send_message(event.conv, 'No prerequisites')
+    except:
+        bot.send_message(event.conv, 'something wobbed up')

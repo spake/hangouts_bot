@@ -242,3 +242,15 @@ def flip(bot, event, *args):
     """Flip a coin"""
     n = random.randint(0, 1)
     bot.send_message(event.conv, "Heads" if n else "Tails")
+    
+@command.register
+def roll(bot, event, roll='6', *args):
+    """Roll a die"""
+    try:
+        if '-' in roll:
+            limits = roll.split('-')
+            return random.randint(int(limits[0]), int(limits[1]))
+        else:
+            return random.randint(1, int(roll))
+    except:
+        return "try again u wob"

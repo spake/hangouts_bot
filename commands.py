@@ -1,6 +1,7 @@
 import sys, json, random, asyncio
 
 import hangups
+import random
 from hangups.ui.utils import get_conv_name
 
 from hangupsbot.utils import text_to_segments
@@ -228,3 +229,9 @@ def config(bot, event, cmd=None, *args):
                 hangups.ChatMessageSegment('\n', hangups.SegmentType.LINE_BREAK)]
     segments.extend(text_to_segments(json.dumps(value, indent=2, sort_keys=True)))
     bot.send_message_segments(event.conv, segments)
+
+@command.register
+def flip(bot, event, *args):
+    """Flip a coin"""
+    n = random.randint(0, 1)
+    bot.send_message(event.conv, "Heads" if n else "Tails")

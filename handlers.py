@@ -1,4 +1,4 @@
-import logging, shlex, unicodedata, asyncio
+import logging, shlex, unicodedata, asyncio, re
 
 import hangups
 
@@ -113,3 +113,6 @@ class MessageHandler(object):
                     if self.word_in_text(kw, event.text):
                         self.bot.send_message(event.conv, sentence)
                         break
+        message = re.sub(r'[^a-zA-Z]', '', event.text)
+        if (message and message == message.upper()):
+            self.bot.send_message(event.conv, "WOO, CAPSLOCK!")

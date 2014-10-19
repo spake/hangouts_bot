@@ -113,6 +113,10 @@ class MessageHandler(object):
                     if self.word_in_text(kw, event.text):
                         self.bot.send_message(event.conv, sentence)
                         break
+
+    @asyncio.coroutine
+    def handle_autoreply(self, event):
+        """Handle replying to messages all in caps"""
         message = re.sub(r'[^a-zA-Z]', '', event.text)
         if (message and message == message.upper()):
-            self.bot.send_message(event.conv, "WOO, CAPSLOCK!")
+            self.bot.send_message(event.conv, "YOU ARE TYPING IN CAPSLOCK!")

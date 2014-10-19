@@ -1,4 +1,4 @@
-import logging, shlex, unicodedata, asyncio
+import logging, shlex, unicodedata, asyncio, re
 
 import hangups
 
@@ -41,6 +41,9 @@ class MessageHandler(object):
 
                 # Send automatic replies
                 yield from self.handle_autoreply(event)
+
+                # thanks wobcke. thobcke
+                yield from self.handle_thanks(event)
 
     @asyncio.coroutine
     def handle_command(self, event):
@@ -113,3 +116,12 @@ class MessageHandler(object):
                     if self.word_in_text(kw, event.text):
                         self.bot.send_message(event.conv, sentence)
                         break
+
+    @asyncio.coroutine
+    def handle_thanks(self, event):
+        text = event.text.strip()
+        m = re.match(r'^thanks[, ]+(.*)$', text, re.I)
+        if m:
+            subject = m.group(1).lower()
+            subject = re.sub(r'^(y|[^aeiouy]+|)', 'th', subject)
+            self.bot.send_message(event.conv, subject)

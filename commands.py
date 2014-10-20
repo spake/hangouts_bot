@@ -96,13 +96,16 @@ def echo(bot, event, *args):
     bot.send_message(event.conv, '{}'.format(' '.join(args)))
 
 @command.register
-def roll(bot, event, *args):
-    r = dice.roll(''.join(args))
-    output = ""
-    for i in r:
-        output += " " + str(i)
-    output += "] = " + str(int(r))
-    bot.send_message(event.conv, "[" + output.strip())
+def roll(bot, event, diceroll, *args):
+    if diceroll < 50:
+        r = dice.roll(diceroll)
+        output = ""
+        for i in r:
+            output += " " + str(i)
+        output += "] = " + str(int(r))
+        bot.send_message(event.conv, "[" + output.strip())
+    else:
+        bot.send_message(event.conv, "u wob m8? trying to fuk me up?")
 
 @command.register
 def users(bot, event, *args):

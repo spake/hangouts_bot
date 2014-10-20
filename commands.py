@@ -284,6 +284,6 @@ def define(bot, event, *args):
             word_defns = json.loads(urlopen(url).read().decode('utf-8'))
             bot.send_message(event.conv, word_defns[0]['text'])
         except:
-            bot.send_message('... disappointed')
+            bot.send_message(event.conv, '... disappointed')
     else:
-        bot.send_message('too long m8')
+        bot.send_message(event.conv, 'too long m8')

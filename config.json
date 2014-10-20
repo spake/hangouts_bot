@@ -1,0 +1,56 @@
+{
+    "admins": [
+        "103706815767017633999"
+    ],
+    "autoreplies": [
+        [
+            [
+                "hi",
+                "hello"
+            ],
+            "Hello world!"
+        ],
+        [
+            [
+                "illuminati"
+            ],
+            "https://www.youtube.com/watch?v=BrlF46tZiQo"
+        ]
+    ],
+    "autoreplies_enabled": true,
+    "commands_admin": [
+        "rename",
+        "leave",
+        "hangouts",
+        "reload",
+        "quit",
+        "config"
+    ],
+    "commands_enabled": true,
+    "forwarding_enabled": true,
+    "conversations": {
+        "johnwiseheart@gmail.com" : {
+            "autoreplies_enabled": true,
+            "commands_enabled": true,
+            "forwarding_enabled": true,
+            "forward_to": [
+                "UgyjPsrxvnuiFCsvcnl4AaABAQ"
+            ]
+        },
+        "achybby@gmail.com" : {
+            "autoreplies_enabled": true,
+            "commands_enabled": true,
+            "forwareing_enabled": false,
+            "forward_to": []
+        },
+	"UgyjPsrxvnuiFCsvcnl4AaABAQ" : {
+            "autoreplies_enabled": true,
+            "commands_enabled": true,
+            "forwarding_enabled": false,
+            "forward_to": [
+                "0"
+            ]
+	} 
+	
+    }
+}

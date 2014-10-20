@@ -295,3 +295,20 @@ def define(bot, event, *args):
                 bot.send_message(event.conv, '... disappointed')
     else:
         bot.send_message(event.conv, 'too long m8')
+
+@command.register
+def acrostic(bot, event, *args):
+    words = open('/usr/share/dict/words').read().strip().split()
+    for arg in args:
+        arg_letters = [letter for letter in arg]
+        random_words = []
+        for letter in letters:
+            if letter == letters[-1]:
+                random_words.append(random.choice([word for word in words if word[0].lower() == letter and word[len(word)-2] != "'"]))
+            else:
+                random_words.append(random.choice([word for word in words if word[0].lower() == letter]))
+        
+        random_words = " ".join([word[0].upper() + word[1:] for word in random_words])
+        
+        msg = "".join([letter.upper() for letter in letters]) + ": " + random_words
+        bot.send_message(event.conv, msg)

@@ -1,8 +1,9 @@
-import logging, shlex, unicodedata, asyncio, re
+import logging, shlex, unicodedata, asyncio, re, json
 
 import hangups
 
 from hangupsbot.commands import command
+from urllib.request import urlopen
 
 
 class MessageHandler(object):
@@ -128,3 +129,23 @@ class MessageHandler(object):
              subject = m.group(1).lower()
              subject = re.sub(r'^(y|[^aeiouy]+|)', 'th', subject)
              self.bot.send_message(event.conv, subject)
+
+    @asyncio.coroutine
+    def handle_define(self, event):
+        # Set some arbitrary max word length to avoid killing the bot
+        if len(event.text) < 25:
+            text = event.text.strip()
+            m = re.match(r'^define\s+(.*)$', text, re.I)
+            if m:
+                word = m.group(1).lower()
+                url = 'http://api.wordnik.com/v4/word.json/' + word + '/definitions?limit=200&includeRelated=true&sourceDictionaries=ahd&useCanonical=true&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5'
+                try:
+                    word_defns = json.loads(urlopen(url).read().decode('utf-8'))
+                    if word_defns[0]['text']:
+                        bot.send_message(event.conv, word_defns[0]['text'])
+                    else:
+                        bot.send_message(event.conv, 'Undefined')
+                except:
+                    bot.send_message(event.conv, 'something wobbed up')
+        else:
+            bot.send_message('too long m8')

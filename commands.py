@@ -274,3 +274,16 @@ def fortune(bot, event, *args):
     m = re.search("class=\"cookie-link\">(<p>)?", html)
     m = re.search("(</p>)?</a>",html[m.end():])
     bot.send_message(event.conv, m.string[:m.start()])
+
+@command.register
+def define(bot, event, *args):
+    text = ''.join(args)
+    if len(text) < 25:
+        url = 'http://api.wordnik.com/v4/word.json/' + text + '/definitions?limit=200&includeRelated=true&sourceDictionaries=ahd&useCanonical=true&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5'
+        try:
+            word_defns = json.loads(urlopen(url).read().decode('utf-8'))
+            bot.send_message(event.conv, word_defns[0]['text'])
+        except:
+            bot.send_message('... disappointed')
+    else:
+        bot.send_message('too long m8')

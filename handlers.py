@@ -1,8 +1,9 @@
-import logging, shlex, unicodedata, asyncio, re
+import logging, shlex, unicodedata, asyncio, re, json
 
 import hangups
 
 from hangupsbot.commands import command
+from urllib.request import urlopen
 
 
 class MessageHandler(object):

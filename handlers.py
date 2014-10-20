@@ -44,6 +44,9 @@ class MessageHandler(object):
                 
                 yield from self.handle_thanks(event)
 
+                # thanks wobcke. thobcke
+                yield from self.handle_thanks(event)
+
     @asyncio.coroutine
     def handle_command(self, event):
         """Handle command messages"""

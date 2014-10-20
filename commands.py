@@ -280,10 +280,10 @@ def define(bot, event, *args):
     text = ''.join(args)
     if len(text) < 50:
         url = 'http://www.igrec.ca/project-files/wikparser/wikparser.php?word={}&query=def&count=1'.format(text)
-        try:
-            word_defns = json.loads(urlopen(url).read().decode('utf-8'))
-            bot.send_message(event.conv, word_defns[0]['text'])
-        except:
+        html = urlopen(url).read().decode('utf-8')
+        if html:
+            bot.send_message(event.conv, html)
+        else:
             bot.send_message(event.conv, '... disappointed')
     else:
         bot.send_message(event.conv, 'too long m8')

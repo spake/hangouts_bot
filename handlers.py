@@ -42,8 +42,6 @@ class MessageHandler(object):
                 # Send automatic replies
                 yield from self.handle_autoreply(event)
                 
-                yield from self.handle_thanks(event)
-
                 # thanks wobcke. thobcke
                 yield from self.handle_thanks(event)
 

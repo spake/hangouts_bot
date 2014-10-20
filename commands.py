@@ -284,7 +284,7 @@ def define(bot, event, *args):
     if len(text) < 50:
         url = 'http://www.igrec.ca/project-files/wikparser/wikparser.php?word={}&query=def&count=1'.format(text)
         html = urlopen(url).read().decode('utf-8')
-        if html != "No such word." and html != "No such word for specified language.":
+        if html != "No such word." and html != "No such word for specified language." and html:
             bot.send_message(event.conv, html)
         else:
             url = "http://urbanscraper.herokuapp.com/define/{}".format(text)

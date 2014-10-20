@@ -42,6 +42,9 @@ class MessageHandler(object):
                 # Send automatic replies
                 yield from self.handle_autoreply(event)
                 
+                # I AM TYPING IN CAPSLOCK
+                yield from self.handle_capslock(event)
+                
                 # thanks wobcke. thobcke
                 yield from self.handle_thanks(event)
 
@@ -116,9 +119,13 @@ class MessageHandler(object):
                     if self.word_in_text(kw, event.text):
                         self.bot.send_message(event.conv, sentence)
                         break
+    
+    @asyncio.coroutine
+    def handle_capslock(self, event):
+        """Handle capslock"""
         message = re.sub(r'[^a-zA-Z]', '', event.text)
         if (message and message == message.upper()):
-            self.bot.send_message(event.conv, "WOO, CAPSLOCK!")
+            self.bot.send_message(event.conv, "YOU ARE TYPING IN CAPSLOCK!")
 
     @asyncio.coroutine
     def handle_thanks(self, event):

@@ -281,7 +281,7 @@ def define(bot, event, *args):
     if len(text) < 50:
         url = 'http://www.igrec.ca/project-files/wikparser/wikparser.php?word={}&query=def&count=1'.format(text)
         html = urlopen(url).read().decode('utf-8')
-        if html:
+        if not "o such word." in html:
             bot.send_message(event.conv, html)
         else:
             bot.send_message(event.conv, '... disappointed')

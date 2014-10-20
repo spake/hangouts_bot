@@ -274,3 +274,18 @@ def fortune(bot, event, *args):
     m = re.search("class=\"cookie-link\">(<p>)?", html)
     m = re.search("(</p>)?</a>",html[m.end():])
     bot.send_message(event.conv, m.string[:m.start()])
+
+@command.register
+def define(bot, event, *args):
+    m = re.match(r'^define\s+(.*)$', ''.join(args), re.I)
+    if m:
+        word = m.group(1).lower()
+        url = 'http://api.wordnik.com/v4/word.json/' + word + '/definitions?limit=200&includeRelated=true&sourceDictionaries=ahd&useCanonical=true&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5'
+        try:
+            word_defns = json.loads(urlopen(url).read().decode('utf-8'))
+            if word_defns[0]['text']:
+                bot.send_message(event.conv, word_defns[0]['text'])
+            else:
+                bot.send_message('Undefined')
+        except:
+            bot.send_message('something wobbed up')

@@ -279,7 +279,7 @@ def fortune(bot, event, *args):
 def define(bot, event, *args):
     text = ''.join(args)
     if len(text) < 50:
-        url = 'http://api.wordnik.com/v4/word.json/' + text + '/definitions?limit=200&includeRelated=true&sourceDictionaries=ahd&useCanonical=true&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5'
+        url = 'http://www.igrec.ca/project-files/wikparser/wikparser.php?word={}&query=def&count=1'.format(text)
         try:
             word_defns = json.loads(urlopen(url).read().decode('utf-8'))
             bot.send_message(event.conv, word_defns[0]['text'])

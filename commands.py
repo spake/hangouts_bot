@@ -284,6 +284,11 @@ def define(bot, event, *args):
         if not "o such word." in html:
             bot.send_message(event.conv, html)
         else:
-            bot.send_message(event.conv, '... disappointed')
+            url = "http://urbanscraper.herokuapp.com/define/{}".format(text)
+            msg = json.loads(urlopen(url).read().decode('utf-8'))["definition"]
+            if msg:
+                bot.send_message(event.conv, msg)
+            else:
+                bot.send_message(event.conv, '... disappointed')
     else:
         bot.send_message(event.conv, 'too long m8')

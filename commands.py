@@ -278,7 +278,7 @@ def fortune(bot, event, *args):
 @command.register
 def define(bot, event, *args):
     text = ''.join(args)
-    if len(text) < 25:
+    if len(text) < 50:
         url = 'http://api.wordnik.com/v4/word.json/' + text + '/definitions?limit=200&includeRelated=true&sourceDictionaries=ahd&useCanonical=true&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5'
         try:
             word_defns = json.loads(urlopen(url).read().decode('utf-8'))

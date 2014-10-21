@@ -302,8 +302,8 @@ def acrostic(bot, event, *args):
     for arg in args:
         letters = [letter for letter in arg]
         random_words = []
-        for letter in letters:
-            if letter == letters[-1]:
+        for index, letter in enumerate(letters):
+            if index == len(arg)-1:
                 random_words.append(random.choice([word for word in words if word[0].lower() == letter and word[len(word)-2] != "'"]))
             else:
                 random_words.append(random.choice([word for word in words if word[0].lower() == letter]))

@@ -97,7 +97,7 @@ def echo(bot, event, *args):
 
 @command.register
 def roll(bot, event, diceroll, *args):
-    if diceroll < 50:
+    if len(diceroll) <= 5:
         r = dice.roll(diceroll)
         output = ""
         for i in r:

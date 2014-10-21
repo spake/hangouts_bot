@@ -300,7 +300,7 @@ def define(bot, event, *args):
 def acrostic(bot, event, *args):
     words = open('/usr/share/dict/words').read().strip().split()
     for arg in args:
-        arg_letters = [letter for letter in arg]
+        letters = [letter for letter in arg]
         random_words = []
         for letter in letters:
             if letter == letters[-1]:

@@ -19,7 +19,7 @@ class CommandDispatcher(object):
     def run(self, bot, event, *args, **kwds):
         """Run command"""
         try:
-            func = self.commands[args[0]]
+            func = self.commands[args[0].lower()]
         except KeyError:
             if self.unknown_command:
                 func = self.unknown_command

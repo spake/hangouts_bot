@@ -49,6 +49,8 @@ class MessageHandler(object):
                 # thanks wobcke. thobcke
                 yield from self.handle_thanks(event)
 
+                yield from self.handle_regex(event)
+
     @asyncio.coroutine
     def handle_command(self, event):
         """Handle command messages"""
@@ -130,9 +132,82 @@ class MessageHandler(object):
 
     @asyncio.coroutine
     def handle_thanks(self, event):
-         text = event.text.strip()
-         m = re.match(r'^thanks[, ]+(.*)$', text, re.I)
-         if m:
-             subject = m.group(1).lower()
-             subject = re.sub(r'^(y|[^aeiouy]+|)', 'th', subject)
-             self.bot.send_message(event.conv, subject)
+        text = event.text.strip()
+        m = re.match(r'^thanks[, ]+(.*)$', text, re.I)
+        if m:
+            subject = m.group(1).lower()
+            subject = re.sub(r'^(y|[^aeiouy]+|)', 'th', subject)
+            self.bot.send_message(event.conv, subject)
+
+    last_message = {}
+    last_message_lock = asyncio.Lock()
+
+    @asyncio.coroutine
+    def handle_regex(self, event):
+        with (yield from self.last_message_lock):
+            text = event.text
+            user_id = event.user_id
+
+            if text.lower().startswith('s/') and len(text) > 2:
+                try:
+                    STATE_PATTERN = 0
+                    STATE_REPL = 1
+                    STATE_FLAGS = 2
+
+                    state = STATE_PATTERN
+                    i = 2
+
+                    s = ''
+                    ALLOWED_FLAGS = {'g', 'i'}
+                    flags = set()
+
+                    while i < len(text):
+                        curr = text[i]
+                        next_ = text[i+1] if i+1 < len(text) else None
+
+                        if state == STATE_PATTERN or state == STATE_REPL:
+                            if curr == '\\':
+                                if next_ == '/':
+                                    s += next_
+                                else:
+                                    s += curr + next_
+                                i += 2
+                            elif curr == '/':
+                                if state == STATE_PATTERN:
+                                    pattern = s
+                                elif state == STATE_REPL:
+                                    repl = s
+                                
+                                state += 1
+                                s = ''
+                                i += 1
+                            else:
+                                s += curr
+                                i += 1
+                        elif state == STATE_FLAGS:
+                            if curr not in ALLOWED_FLAGS:
+                                raise Exception()
+                            flags.add(curr)
+                            i += 1
+
+                    if user_id in self.last_message:
+                        msg = self.last_message[user_id]
+
+                        re_flags = 0
+                        if 'i' in flags:
+                            re_flags |= re.I
+
+                        if 'g' in flags:
+                            msg = re.sub(pattern, repl, msg, flags=re_flags)
+                        else:
+                            msg = re.sub(pattern, repl, msg, count=1, flags=re_flags)
+
+                        self.last_message[user_id] = msg
+
+                        self.bot.send_message(event.conv, '"{}" FTFY'.format(msg))
+                except Exception as e:
+                    pass
+                    #self.bot.send_message(event.conv, 'pooped: ' + repr(e))
+                    self.bot.send_message(event.conv, 'm8, l2regex')
+            else:
+                self.last_message[user_id] = text
